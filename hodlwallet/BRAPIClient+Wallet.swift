@@ -81,8 +81,8 @@ extension BRAPIClient {
                         let fastest = estimates30["sat_per_vbyte"] as? NSNumber,
                         let estimates60 = estimates["60"] as? NSDictionary,
                         let regular = estimates60["sat_per_vbyte"] as? NSNumber,
-                        let estimates360 = estimates["360"] as? NSDictionary,
-                        let economy = estimates360["sat_per_vbyte"] as? NSNumber {
+                        let estimates180 = estimates["180"] as? NSDictionary,
+                        let economy = estimates180["sat_per_vbyte"] as? NSNumber {
                         let fastestTimeText:NSString = "10 - 45 minutes"
                         let regularTimeText:NSString = "1 - 2 hours"
                         let economyTimeText:NSString = "3 - 24 hours"
