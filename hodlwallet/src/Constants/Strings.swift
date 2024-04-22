@@ -141,6 +141,7 @@ enum S {
     enum Transaction {
         static let justNow = NSLocalizedString("Transaction.justNow", value:"just now", comment: "Timestamp label for event that just happened")
         static let invalid = NSLocalizedString("Transaction.invalid", value:"INVALID", comment: "Invalid transaction")
+        static let replacedByFee = NSLocalizedString("Transaction.replacedByFee", value:"REPLACED BY FEE", comment: "Replace-by-fee transaction")
         static let complete = NSLocalizedString("Transaction.complete", value:"Complete", comment: "Transaction complete label")
         static let waiting = NSLocalizedString("Transaction.waiting", value:"Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours.", comment: "Waiting to be confirmed string")
         static let starting = NSLocalizedString("Transaction.starting", value: "Starting balance: %1$@", comment: "eg. Starting balance: $50.00")
@@ -165,6 +166,9 @@ enum S {
         static let emptyMessage = NSLocalizedString("TransactionDetails.emptyMessage", value:"Your transactions will appear here.", comment: "Empty transaction list message.")
         static let more = NSLocalizedString("TransactionDetails.more", value:"More...", comment: "More button title")
         static let txHashHeader = NSLocalizedString("TransactionDetails.txHashHeader", value:"Bitcoin Transaction ID", comment: "Transaction ID header")
+        static let replaceByFee = NSLocalizedString("TransactionDetails.replaceByFee", value:"Replace By Fee", comment: "Replace By Fee")
+        static let replaceByFeeNotAvailable = NSLocalizedString("TransactionDetails.replaceByFeeNotAvailable", value:"Transaction Confirmed", comment: "Transaction Confirmed")
+        static let replaceByFeeAvailable = NSLocalizedString("TransactionDetails.replaceByFeeAvailable", value:"Click To Replace By Fee", comment: "Click To Replace By Fee")
         static let sentAmountDescription = NSLocalizedString("TransactionDetails.sentAmountDescription", value: "Sent <b>-%1$@</b>", comment: "Sent $5.00")
         static let receivedAmountDescription = NSLocalizedString("TransactionDetails.receivedAmountDescription", value: "Received <b>%1$@</b>", comment: "Received $5.00")
         static let movedAmountDescription = NSLocalizedString("TransactionDetails.movedAmountDescription", value: "Transferred to self <b>%1$@</b>", comment: "Transferred to self $5.00")

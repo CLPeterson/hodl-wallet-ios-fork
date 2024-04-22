@@ -243,6 +243,11 @@ class ModalPresenter : Subscriber, Trackable {
             }
             
             return ModalViewController(childViewController: requestVc, store: store)
+        case .replaceByFee:
+            guard let address = store.state.replaceByFeeTxn?.toAddress else { return nil }
+            guard let amount = store.state.replaceByFeeTxn?.toSatoshis else { return nil }
+            guard let tx = store.state.replaceByFeeTxn?.toTx else { return nil }
+            return makeReplaceByFeeView(address: address, amount: amount, txn: tx)
         }
     }
 
@@ -256,6 +261,39 @@ class ModalPresenter : Subscriber, Trackable {
         guard let walletManager = walletManager else { return nil }
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
         let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), walletManager: walletManager, initialRequest: currentRequest)
+        currentRequest = nil
+
+        if store.state.isLoginRequired {
+            sendVC.isPresentedFromLock = true
+        }
+
+        let root = ModalViewController(childViewController: sendVC, store: store)
+        sendVC.presentScan = presentScan(parent: root)
+        sendVC.presentVerifyPin = { [weak self, weak root] bodyText, callback in
+            guard let myself = self else { return }
+            let vc = VerifyPinViewController(bodyText: bodyText, pinLength: myself.store.state.pinLength, callback: callback)
+            vc.transitioningDelegate = self?.verifyPinTransitionDelegate
+            vc.modalPresentationStyle = .overFullScreen
+            vc.modalPresentationCapturesStatusBarAppearance = true
+            root?.view.isFrameChangeBlocked = true
+            root?.present(vc, animated: true, completion: nil)
+        }
+        sendVC.onPublishSuccess = { [weak self] in
+            self?.presentAlert(.sendSuccess, completion: {})
+        }
+        return root
+    }
+    
+    private func makeReplaceByFeeView(address: String, amount: UInt64, txn: BRTxRef) -> UIViewController? {
+        guard !store.state.walletState.isRescanning else {
+            let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+            topViewController?.present(alert, animated: true, completion: nil)
+            return nil
+        }
+        guard let walletManager = walletManager else { return nil }
+        guard let kvStore = walletManager.apiClient?.kv else { return nil }
+        let sendVC = ReplaceByFeeViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), walletManager: walletManager, originalTx: txn, initialAmount: amount, initialAddress: address, initialRequest: currentRequest)
         currentRequest = nil
 
         if store.state.isLoginRequired {

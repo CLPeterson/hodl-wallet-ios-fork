@@ -465,6 +465,12 @@ class BRWallet {
         return BRWalletCreateTransaction(cPtr, forAmount, toAddress)
     }
     
+    // returns an unsigned transaction that sends the specified amount from the wallet to the given address
+    func createTransactionReplaceByFee(forAmount: UInt64, toAddress: String, txOriginal: BRTxRef) -> BRTxRef? {
+        // guard (txOriginal != nil) else { return nil }
+        return BRWalletCreateTransactionReplaceByFee(cPtr, forAmount, toAddress, txOriginal)
+    }
+    
     // returns an unsigned transaction that satisifes the given transaction outputs
     func createTxForOutputs(_ outputs: [BRTxOutput]) -> BRTxRef {
         return BRWalletCreateTxForOutputs(cPtr, outputs, outputs.count)
@@ -481,6 +487,11 @@ class BRWallet {
     // true if no previous wallet transaction spends any of the given transaction's inputs, and no inputs are invalid
     func transactionIsValid(_ tx: BRTxRef) -> Bool {
         return BRWalletTransactionIsValid(cPtr, tx) != 0
+    }
+    
+    // true if transaction has been successfully replaced by fee
+    func transactionIsReplacedByFee(_ tx: BRTxRef) -> Bool {
+        return BRWalletTransactionIsReplacedByFee(cPtr, tx) != 0
     }
     
     // true if transaction cannot be immediately spent (i.e. if it or an input tx can be replaced-by-fee)

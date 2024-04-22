@@ -33,7 +33,8 @@ struct HideStartFlow : Action {
                      isPushNotificationsEnabled: state.isPushNotificationsEnabled,
                      isPromptingBiometrics: state.isPromptingBiometrics,
                      pinLength: state.pinLength,
-                     fees: state.fees)
+                     fees: state.fees,
+                     replaceByFeeTxn: nil)
     }
 }
 
@@ -61,6 +62,9 @@ struct RootModalActions {
         let reduce: Reducer
         init(modal: RootModal) {
             reduce = { $0.rootModal(modal) }
+        }
+        init(modal: RootModal, transaction: Transaction?) {
+            reduce = { $0.replaceByFee(modal, transaction) }
         }
     }
 }
@@ -259,7 +263,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func rootModal(_ type: RootModal) -> State {
         return State(isStartFlowVisible: false,
@@ -278,7 +283,28 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
+    }
+    func replaceByFee(_ type: RootModal, _ transaction: Transaction?) -> State {
+        return State(isStartFlowVisible: false,
+                     isLoginRequired: isLoginRequired,
+                     rootModal: type,
+                     walletState: walletState,
+                     isBtcSwapped: isBtcSwapped,
+                     currentRate: currentRate,
+                     rates: rates,
+                     alert: alert,
+                     isBiometricsEnabled: isBiometricsEnabled,
+                     defaultCurrencyCode: defaultCurrencyCode,
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions,
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled,
+                     isPromptingBiometrics: isPromptingBiometrics,
+                     pinLength: pinLength,
+                     fees: fees,
+                     replaceByFeeTxn: transaction)
     }
     func clone(pasteboard: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -297,7 +323,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(walletSyncProgress: Double, timestamp: UInt32) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -316,7 +343,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(syncState: SyncState) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -335,7 +363,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(balance: UInt64) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -354,7 +383,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(transactions: [Transaction]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -373,7 +403,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(walletName: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -392,7 +423,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(walletSyncingErrorMessage: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -411,7 +443,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(walletCreationDate: Date) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -430,7 +463,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(isRescanning: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -449,7 +483,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(isBtcSwapped: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -468,7 +503,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(isLoginRequired: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -487,7 +523,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(currentRate: Rate, rates: [Rate]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -506,7 +543,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(currentRate: Rate) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -525,7 +563,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(alert: AlertType?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -544,7 +583,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(isBiometricsEnabled: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -563,7 +603,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(defaultCurrencyCode: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -582,7 +623,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(recommendRescan: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -601,7 +643,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(isLoadingTransactions: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -620,7 +663,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(maxDigits: Int) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -639,7 +683,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(isPushNotificationsEnabled: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -658,7 +703,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(isPromptingBiometrics: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -677,7 +723,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(pinLength: Int) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -696,7 +743,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
     func clone(fees: Fees) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -715,6 +763,7 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     replaceByFeeTxn: nil)
     }
 }

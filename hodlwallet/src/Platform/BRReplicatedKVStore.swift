@@ -452,7 +452,7 @@ open class BRReplicatedKVStore: NSObject {
         // 3. for keys that we do have, sync em
         // 4. for keys that they don't have that we do, upload em
 
-        return
+        // return
         
         if syncRunning {
             DispatchQueue.main.async(execute: { 

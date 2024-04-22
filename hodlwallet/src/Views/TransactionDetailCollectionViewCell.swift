@@ -34,6 +34,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         txHash.setTitle(transaction.hash, for: .normal)
         availability.isHidden = !transaction.shouldDisplayAvailableToSpend
         blockHeight.text = transaction.blockHeight
+        replaceByFeeButton.setTitle(transaction.replaceByFeeStatus, for: .normal)
         self.transaction = transaction
         self.rate = rate
     }
@@ -84,6 +85,9 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let availability = UILabel(font: .customBold(size: 13.0), color: .gradientEnd)
     private let blockHeight = UILabel(font: .customBody(size: 13.0), color: .whiteTint)
     private var scrollViewHeight: NSLayoutConstraint?
+    private let replaceByFeeButton = UIButton(type: .system)
+    private let replaceByFeeHeader = UILabel(font: .customBold(size: 14.0), color: .whiteTint)
+    // private let sender: Sender
 
     private func setup() {
         addSubviews()
@@ -257,6 +261,17 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             myself.store?.trigger(name: .lightWeightAlert(S.Receive.copied))
             UIPasteboard.general.string = myself.txHash.titleLabel?.text
         }
+        
+        replaceByFeeButton.titleLabel?.font = .customBody(size: 13.0)
+        replaceByFeeButton.titleLabel?.numberOfLines = 0
+        replaceByFeeButton.titleLabel?.lineBreakMode = .byCharWrapping
+        replaceByFeeButton.tintColor = .whiteTint
+        replaceByFeeButton.contentHorizontalAlignment = .left
+        // TODO: Don't call function if transaction confirmed
+        replaceByFeeButton.tap = strongify(self) { myself in
+            myself.replaceByFeeButton.tempDisable()
+            myself.replaceByFeeAction()
+        }
     }
 
     private func addMoreView() {
@@ -265,6 +280,10 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         moreContentView.addSubview(newSeparator)
         moreContentView.addSubview(txHashHeader)
         moreContentView.addSubview(txHash)
+        moreContentView.addSubview(replaceByFeeHeader)
+        moreContentView.addSubview(replaceByFeeButton)
+        let middleSeparator = UIView(color: .secondaryGrayText)
+        moreContentView.addSubview(middleSeparator)
         txHashHeader.text = S.TransactionDetails.txHashHeader
         txHashHeader.constrain([
             txHashHeader.leadingAnchor.constraint(equalTo: moreContentView.leadingAnchor),
@@ -284,13 +303,33 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         blockHeight.constrain([
             blockHeight.leadingAnchor.constraint(equalTo: blockHeightHeader.leadingAnchor),
             blockHeight.topAnchor.constraint(equalTo: blockHeightHeader.bottomAnchor) ])
-
-        newSeparator.constrain([
-            newSeparator.leadingAnchor.constraint(equalTo: blockHeight.leadingAnchor),
-            newSeparator.topAnchor.constraint(equalTo: blockHeight.bottomAnchor, constant: C.padding[2]),
-            newSeparator.trailingAnchor.constraint(equalTo: moreContentView.trailingAnchor),
-            newSeparator.heightAnchor.constraint(equalToConstant: 1.0),
-            newSeparator.bottomAnchor.constraint(equalTo: moreContentView.bottomAnchor) ])
+        
+        middleSeparator.constrain([
+            middleSeparator.leadingAnchor.constraint(equalTo: blockHeight.leadingAnchor),
+            middleSeparator.topAnchor.constraint(equalTo: blockHeight.bottomAnchor, constant: C.padding[2]),
+            middleSeparator.trailingAnchor.constraint(equalTo: moreContentView.trailingAnchor),
+            middleSeparator.heightAnchor.constraint(equalToConstant: 1.0),
+            // middleSeparator.bottomAnchor.constraint(equalTo: moreContentView.bottomAnchor)
+        ])
+        
+        
+        replaceByFeeHeader.text = S.TransactionDetails.replaceByFee
+        replaceByFeeHeader.constrain([
+            replaceByFeeHeader.leadingAnchor.constraint(equalTo: middleSeparator.leadingAnchor),
+            replaceByFeeHeader.topAnchor.constraint(equalTo: middleSeparator.bottomAnchor, constant: C.padding[1]) ])
+        
+        replaceByFeeButton.constrain([
+            replaceByFeeButton.leadingAnchor.constraint(equalTo: replaceByFeeHeader.leadingAnchor),
+            replaceByFeeButton.topAnchor.constraint(equalTo: replaceByFeeHeader.bottomAnchor, constant: 2.0),
+            replaceByFeeButton.trailingAnchor.constraint(lessThanOrEqualTo: moreContentView.trailingAnchor)
+        ])
+        
+         newSeparator.constrain([
+             newSeparator.leadingAnchor.constraint(equalTo: replaceByFeeButton.leadingAnchor),
+             newSeparator.topAnchor.constraint(equalTo: replaceByFeeButton.bottomAnchor, constant: C.padding[2]),
+             newSeparator.trailingAnchor.constraint(equalTo: moreContentView.trailingAnchor),
+             newSeparator.heightAnchor.constraint(equalToConstant: 1.0),
+             newSeparator.bottomAnchor.constraint(equalTo: moreContentView.bottomAnchor) ])
 
         //Scroll to expaned more view
         scrollView.layoutIfNeeded()
@@ -298,6 +337,10 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             let point = CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.bounds.height)
             self.scrollView.setContentOffset(point, animated: true)
         }
+    }
+    
+    private func replaceByFeeAction() {
+        store?.perform(action: RootModalActions.Present(modal: .replaceByFee, transaction: self.transaction))
     }
 
     override func layoutSubviews() {

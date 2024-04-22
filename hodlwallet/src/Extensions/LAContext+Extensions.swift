@@ -43,6 +43,8 @@ extension LAContext {
                 return .touch
             case .faceID:
                 return .face
+            case .opticID:
+                return .none
             }
         } else {
             return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) ? .touch : .none

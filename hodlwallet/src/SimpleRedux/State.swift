@@ -26,6 +26,7 @@ struct State {
     let isPromptingBiometrics: Bool
     let pinLength: Int
     let fees: Fees
+    let replaceByFeeTxn: Transaction?
 }
 
 extension State {
@@ -46,7 +47,8 @@ extension State {
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
                         isPromptingBiometrics: false,
                         pinLength: 6,
-                        fees: Fees.defaultFees )
+                        fees: Fees.defaultFees,
+                        replaceByFeeTxn: nil)
     }
 }
 
@@ -59,6 +61,7 @@ enum RootModal {
     case loginScan
     case manageWallet
     case requestAmount
+    case replaceByFee
 }
 
 enum SyncState {

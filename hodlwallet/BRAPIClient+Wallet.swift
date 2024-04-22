@@ -59,6 +59,55 @@ extension BRAPIClient {
         task.resume()
     }
     
+    func feePerKbBitcoiner(_ handler: @escaping (_ fees: Fees, _ error: String?) -> Void) {
+        #if Testflight || Debug
+        let req = URLRequest(url: URL(string: "https://bitcoiner.live/api/fees/estimates/latest")!)
+        #else
+            let req = URLRequest(url: URL(string: "https://bitcoiner.live/api/fees/estimates/latest")!)
+        #endif
+
+        let task = self.dataTaskWithRequest(req) { (data, response, err) -> Void in
+            var fastestFee = Fees.defaultFees.fastest
+            var regularFee = Fees.defaultFees.regular
+            var economyFee = Fees.defaultFees.economy
+            var errStr: String? = nil
+            if err == nil {
+                do {
+                    let parsedObject: Any? = try JSONSerialization.jsonObject(
+                        with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
+                    if let top = parsedObject as? NSDictionary,
+                        let estimates = top["estimates"] as? NSDictionary,
+                        let estimates30 = estimates["30"] as? NSDictionary,
+                        let fastest = estimates30["sat_per_vbyte"] as? NSNumber,
+                        let estimates60 = estimates["60"] as? NSDictionary,
+                        let regular = estimates60["sat_per_vbyte"] as? NSNumber,
+                        let estimates360 = estimates["360"] as? NSDictionary,
+                        let economy = estimates360["sat_per_vbyte"] as? NSNumber {
+                        let fastestTimeText:NSString = "10 - 45 minutes"
+                        let regularTimeText:NSString = "1 - 2 hours"
+                        let economyTimeText:NSString = "3 - 24 hours"
+                        let fastestBlocks:Int = Int(2)
+                        let regularBlocks:Int = Int(10)
+                        let economyBlocks:Int = Int(45)
+                        fastestFee = FeeData(sats: fastest.uint64Value * 1000, time: fastestTimeText, blocks: fastestBlocks)
+                        regularFee = FeeData(sats: regular.uint64Value * 1000, time: regularTimeText, blocks: regularBlocks)
+                        economyFee = FeeData(sats: economy.uint64Value * 1000, time: economyTimeText, blocks: economyBlocks)
+                    }
+                } catch (let e) {
+                    self.log("fee-per-kb: error parsing json \(e)")
+                }
+                if fastestFee.sats == 0 || regularFee.sats == 0 || economyFee.sats == 0 {
+                    errStr = "invalid json"
+                }
+            } else {
+                self.log("fee-per-kb network error: \(String(describing: err))")
+                errStr = "bad network connection"
+            }
+            handler(Fees(fastest: fastestFee, regular: regularFee, economy: economyFee), errStr)
+        }
+        task.resume()
+    }
+    
     func exchangeRates(isFallback: Bool = false, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
         #if Testflight || Debug
             let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/hodl/rates.json"))

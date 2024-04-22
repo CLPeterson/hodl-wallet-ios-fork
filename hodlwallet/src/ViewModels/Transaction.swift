@@ -47,6 +47,7 @@ class Transaction {
         let blockHeight = peerManager.lastBlockHeight
         confirms = transactionBlockHeight > blockHeight ? 0 : Int(blockHeight - transactionBlockHeight) + 1
         self.status = makeStatus(tx, wallet: wallet, peerManager: peerManager, confirms: confirms, direction: self.direction)
+        self.replaceByFeeStatus = makeStatus(tx, wallet: wallet, peerManager: peerManager, confirms: confirms, direction: self.direction)
 
         self.hash = tx.pointee.txHash.description
         self.metaDataKey = tx.pointee.txHash.txKey
@@ -105,6 +106,7 @@ class Transaction {
 
     let direction: TransactionDirection
     let status: String
+    let replaceByFeeStatus: String
     let timestamp: Int
     let fee: UInt64
     let hash: String
@@ -180,6 +182,14 @@ class Transaction {
         case .moved:
             return self.balanceAfter.addingReportingOverflow(self.fee).0
         }
+    }()
+    
+    lazy var toSatoshis: UInt64 = {
+        return self.satoshis
+    }()
+    
+    lazy var toTx: BRTxRef = {
+        return self.tx
     }()
 
     // return: (timestampString, shouldStartTimer)
@@ -294,11 +304,14 @@ private extension String {
 
 private func makeStatus(_ txRef: BRTxRef, wallet: BRWallet, peerManager: BRPeerManager, confirms: Int, direction: TransactionDirection) -> String {
     let tx = txRef.pointee
-    guard wallet.transactionIsValid(txRef) else {
+    guard wallet.transactionIsValid(txRef) || wallet.transactionIsReplacedByFee(txRef) else {
         return S.Transaction.invalid
     }
     
-    if confirms < 1 {
+    if wallet.transactionIsReplacedByFee(txRef) {
+        return S.Transaction.replacedByFee
+    }
+    else if confirms < 1 {
         return S.Transaction.awaitingStatus
     }
     else if confirms == 1 {
@@ -312,6 +325,15 @@ private func makeStatus(_ txRef: BRTxRef, wallet: BRWallet, peerManager: BRPeerM
     }
     else {
         return S.Transaction.complete
+    }
+}
+
+private func makeReplaceByFeeStatus(confirms: Int, direction: TransactionDirection) -> String {
+    if confirms < 1 && direction == .sent {
+        return S.TransactionDetails.replaceByFeeAvailable
+    }
+    else {
+        return S.TransactionDetails.replaceByFeeNotAvailable
     }
 }
 

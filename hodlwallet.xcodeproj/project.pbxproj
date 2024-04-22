@@ -53,6 +53,7 @@
 		22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431331DF89DFE0017CAEA /* BRCoderTests.swift */; };
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
+		2C77F4B72BC72E9B00A3F0D2 /* ReplaceByFeeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C77F4B62BC72E9B00A3F0D2 /* ReplaceByFeeViewController.swift */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
 		752438751DAAC50800844BEC /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6761DAA0E400075898E /* alloc.c */; };
@@ -655,6 +656,7 @@
 		22C431331DF89DFE0017CAEA /* BRCoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCoderTests.swift; sourceTree = "<group>"; };
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
+		2C77F4B62BC72E9B00A3F0D2 /* ReplaceByFeeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ReplaceByFeeViewController.swift; path = src/ViewControllers/RootModals/ReplaceByFeeViewController.swift; sourceTree = "<group>"; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+Auth.swift"; path = "src/WalletManager+Auth.swift"; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -3126,6 +3128,7 @@
 			children = (
 				CEC6AA431DEFCDE900EE5AFD /* ModalViewController.swift */,
 				CEC6AA3F1DEFC87300EE5AFD /* SendViewController.swift */,
+				2C77F4B62BC72E9B00A3F0D2 /* ReplaceByFeeViewController.swift */,
 				CEC6AA411DEFC88F00EE5AFD /* ReceiveViewController.swift */,
 				CEC6AA451DEFCE9200EE5AFD /* MenuViewController.swift */,
 				CEC6AA4C1DF0741100EE5AFD /* ModalDisplayable.swift */,
@@ -4021,6 +4024,7 @@
 				22A9A94B1DF61945000F0016 /* BRCoding.swift in Sources */,
 				22A9A9561DF61945000F0016 /* BRWalletPlugin.swift in Sources */,
 				CEF3E8361DE60222007C0A9E /* ModalNavigationController.swift in Sources */,
+				2C77F4B72BC72E9B00A3F0D2 /* ReplaceByFeeViewController.swift in Sources */,
 				CED811E21EB302DD003A8D1E /* WatchTransaction.swift in Sources */,
 				CEB909FA1E5FF242001804DC /* RecoverWalletIntroViewController.swift in Sources */,
 				CE25BF911DF9ADE700BC67B6 /* UIImage+Utils.swift in Sources */,

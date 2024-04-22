@@ -39,6 +39,11 @@ class Sender {
         transaction = walletManager.wallet?.createTransaction(forAmount: amount, toAddress: to)
         return transaction != nil
     }
+    
+    func createTransactionReplaceByFee(amount: UInt64, to: String, txn: BRTxRef) -> Bool {
+        transaction = walletManager.wallet?.createTransactionReplaceByFee(forAmount: amount, toAddress: to, txOriginal: txn)
+        return transaction != nil
+    }
 
     func createTransaction(forPaymentProtocol: PaymentProtocolRequest) {
         protocolRequest = forPaymentProtocol
