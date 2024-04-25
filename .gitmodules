@@ -1,6 +1,7 @@
 [submodule "Modules/breadwallet-core"]
 	path = Modules/breadwallet-core
-	url = https://github.com/hodlwallet/breadwallet-core.git
+	url = https://github.com/CLPeterson/breadwallet-core.git
+        branch = replace-by-fee-core
 [submodule "Modules/unbound"]
 	path = Modules/unbound
 	url = https://github.com/breadwallet/unbound.git

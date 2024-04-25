@@ -268,6 +268,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         replaceByFeeButton.tintColor = .whiteTint
         replaceByFeeButton.contentHorizontalAlignment = .left
         // TODO: Don't call function if transaction confirmed
+        
         replaceByFeeButton.tap = strongify(self) { myself in
             myself.replaceByFeeButton.tempDisable()
             myself.replaceByFeeAction()
@@ -340,7 +341,9 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     }
     
     private func replaceByFeeAction() {
-        store?.perform(action: RootModalActions.Present(modal: .replaceByFee, transaction: self.transaction))
+        if (transaction?.replaceByFeeStatus == S.TransactionDetails.replaceByFeeAvailable) {
+            store?.perform(action: RootModalActions.Present(modal: .replaceByFee, transaction: self.transaction))
+        }
     }
 
     override func layoutSubviews() {

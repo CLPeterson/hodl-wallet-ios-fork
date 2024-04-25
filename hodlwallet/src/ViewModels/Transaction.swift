@@ -47,7 +47,7 @@ class Transaction {
         let blockHeight = peerManager.lastBlockHeight
         confirms = transactionBlockHeight > blockHeight ? 0 : Int(blockHeight - transactionBlockHeight) + 1
         self.status = makeStatus(tx, wallet: wallet, peerManager: peerManager, confirms: confirms, direction: self.direction)
-        self.replaceByFeeStatus = makeStatus(tx, wallet: wallet, peerManager: peerManager, confirms: confirms, direction: self.direction)
+        self.replaceByFeeStatus = makeReplaceByFeeStatus(tx, wallet: wallet, confirms: confirms, direction: self.direction)
 
         self.hash = tx.pointee.txHash.description
         self.metaDataKey = tx.pointee.txHash.txKey
@@ -328,8 +328,10 @@ private func makeStatus(_ txRef: BRTxRef, wallet: BRWallet, peerManager: BRPeerM
     }
 }
 
-private func makeReplaceByFeeStatus(confirms: Int, direction: TransactionDirection) -> String {
-    if confirms < 1 && direction == .sent {
+private func makeReplaceByFeeStatus(_ txRef: BRTxRef, wallet: BRWallet, confirms: Int, direction: TransactionDirection) -> String {
+    if wallet.transactionIsReplacedByFee(txRef) {
+        return S.Transaction.replacedByFee
+    } else if confirms < 1 && direction == .sent {
         return S.TransactionDetails.replaceByFeeAvailable
     }
     else {
