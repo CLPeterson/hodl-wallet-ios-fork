@@ -59,11 +59,11 @@ extension BRAPIClient {
         task.resume()
     }
     
-    func feePerKbBitcoiner(_ handler: @escaping (_ fees: Fees, _ error: String?) -> Void) {
+    func feePerKbRecommended(_ handler: @escaping (_ fees: Fees, _ error: String?) -> Void) {
         #if Testflight || Debug
-        let req = URLRequest(url: URL(string: "https://bitcoiner.live/api/fees/estimates/latest")!)
+        let req = URLRequest(url: URL(string: "https://api.hodlwallet.com/mempool/recommended_fees")!)
         #else
-            let req = URLRequest(url: URL(string: "https://bitcoiner.live/api/fees/estimates/latest")!)
+            let req = URLRequest(url: URL(string: "https://api.hodlwallet.com/mempool/recommended_fees")!)
         #endif
 
         let task = self.dataTaskWithRequest(req) { (data, response, err) -> Void in
@@ -76,13 +76,9 @@ extension BRAPIClient {
                     let parsedObject: Any? = try JSONSerialization.jsonObject(
                         with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
                     if let top = parsedObject as? NSDictionary,
-                        let estimates = top["estimates"] as? NSDictionary,
-                        let estimates30 = estimates["30"] as? NSDictionary,
-                        let fastest = estimates30["sat_per_vbyte"] as? NSNumber,
-                        let estimates60 = estimates["60"] as? NSDictionary,
-                        let regular = estimates60["sat_per_vbyte"] as? NSNumber,
-                        let estimates180 = estimates["180"] as? NSDictionary,
-                        let economy = estimates180["sat_per_vbyte"] as? NSNumber {
+                        let fastest = top["fastestFee"] as? NSNumber,
+                        let regular = top["halfHourFee"] as? NSNumber,
+                        let economy = top["hourFee"] as? NSNumber {
                         let fastestTimeText:NSString = "10 - 45 minutes"
                         let regularTimeText:NSString = "1 - 2 hours"
                         let economyTimeText:NSString = "3 - 24 hours"
