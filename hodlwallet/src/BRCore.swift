@@ -409,7 +409,11 @@ class BRWallet {
     
     // the first unused external address
     var receiveAddress: String {
-        return BRWalletReceiveAddress(cPtr).description
+        // return BRWalletReceiveAddress(cPtr).description
+        var charArray = Array<Int8>(repeating: 0, count: 75)
+        BRWalletReceiveAddressString(cPtr, &charArray, charArray.count)
+        let addr: String = String(cString: charArray)
+        return addr
     }
     
     // the first unused external legacy address
